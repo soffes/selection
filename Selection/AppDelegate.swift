@@ -8,14 +8,20 @@
 
 import UIKit
 
-@UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+@UIApplicationMain final class AppDelegate: UIResponder {
 
-	var window: UIWindow? = UIWindow()
+	// MARK: - Properties
+
+	var window: UIWindow? = {
+		let window = UIWindow()
+		window.rootViewController = UINavigationController(rootViewController: TextViewController())
+		return window
+	}()
+}
 
 
+extension AppDelegate: UIApplicationDelegate {
 	func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-		window?.rootViewController = UINavigationController(rootViewController: ViewController())
 		window?.makeKeyAndVisible()
 		return true
 	}

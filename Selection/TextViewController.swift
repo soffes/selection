@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  TextViewController.swift
 //  Selection
 //
 //  Created by Sam Soffes on 11/12/15.
@@ -8,7 +8,9 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+final class TextViewController: UIViewController {
+
+	// MARK: - Properties
 
 	let textView: UITextView = {
 		let view = UITextView()
@@ -31,6 +33,9 @@ class ViewController: UIViewController {
 
 	let selectionBarButtonItem = UIBarButtonItem()
 	let lineBarButtonItem = UIBarButtonItem()
+
+
+	// MARK: - UIViewController
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -76,6 +81,9 @@ class ViewController: UIViewController {
 		textView.becomeFirstResponder()
 	}
 
+
+	// MARK: - Actions
+
 	@objc private func replaceEscapes(sender: AnyObject?) {
 		textView.text = textView.text.stringByReplacingOccurrencesOfString("\\n", withString: "\n")
 			.stringByReplacingOccurrencesOfString("\\\"", withString: "\"")
@@ -89,7 +97,7 @@ class ViewController: UIViewController {
 }
 
 
-extension ViewController: UITextViewDelegate {
+extension TextViewController: UITextViewDelegate {
 	func textViewDidChangeSelection(textView: UITextView) {
 		selectionBarButtonItem.title = "\(textView.selectedRange)"
 
