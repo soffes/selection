@@ -20,9 +20,9 @@ final class TextViewController: UIViewController {
 
 		let fontSize: CGFloat = 16
 		var fontDescriptor = UIFontDescriptor(fontAttributes: [
-			UIFontDescriptorNameAttribute: "Menlo",
-			UIFontDescriptorCascadeListAttribute: [
-				UIFont.systemFontOfSize(fontSize).fontDescriptor()
+			UIFontDescriptor.AttributeName.name: "Menlo",
+			UIFontDescriptor.AttributeName.cascadeList: [
+				UIFont.systemFont(ofSize: fontSize).fontDescriptor
 			]
 		])
 
@@ -44,39 +44,39 @@ final class TextViewController: UIViewController {
 		textView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 44, right: 0)
 		textView.scrollIndicatorInsets = textView.contentInset
 
-		navigationController?.navigationBarHidden = true
-		navigationController?.toolbarHidden = false
+		navigationController?.isNavigationBarHidden = true
+		navigationController?.isToolbarHidden = false
 
-		view.backgroundColor = .whiteColor()
+		view.backgroundColor = .white
 
 		lineBarButtonItem.target = self
 		lineBarButtonItem.action = #selector(line)
 
-		let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .FlexibleSpace, target: nil, action: nil)
+		let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
 
 		toolbarItems = [
 			selectionBarButtonItem,
 			flexibleSpace,
 			lineBarButtonItem,
 			flexibleSpace,
-			UIBarButtonItem(title: "\\n", style: .Plain, target: self, action: #selector(replaceEscapes))
+			UIBarButtonItem(title: "\\n", style: .plain, target: self, action: #selector(replaceEscapes))
 		]
 
 		textView.delegate = self
 		view.addSubview(textView)
 
-		textView.text = UIPasteboard.generalPasteboard().string
+		textView.text = UIPasteboard.general.string
 		replaceEscapes(nil)
 
-		NSLayoutConstraint.activateConstraints([
-			textView.leadingAnchor.constraintEqualToAnchor(view.leadingAnchor),
-			textView.trailingAnchor.constraintEqualToAnchor(view.trailingAnchor),
-			textView.topAnchor.constraintEqualToAnchor(view.topAnchor, constant: 20),
-			textView.bottomAnchor.constraintEqualToAnchor(view.bottomAnchor)
+		NSLayoutConstraint.activate([
+			textView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+			textView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+			textView.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
+			textView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
 		])
 	}
 
-	override func viewWillAppear(animated: Bool) {
+	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		textView.becomeFirstResponder()
 	}
@@ -84,24 +84,24 @@ final class TextViewController: UIViewController {
 
 	// MARK: - Actions
 
-	@objc private func replaceEscapes(sender: AnyObject?) {
-		textView.text = textView.text.stringByReplacingOccurrencesOfString("\\n", withString: "\n")
-			.stringByReplacingOccurrencesOfString("\\\"", withString: "\"")
-			.stringByReplacingOccurrencesOfString("\\'", withString: "'")
+	@objc fileprivate func replaceEscapes(_ sender: AnyObject?) {
+		textView.text = textView.text.replacingOccurrences(of: "\\n", with: "\n")
+			.replacingOccurrences(of: "\\\"", with: "\"")
+			.replacingOccurrences(of: "\\'", with: "'")
 	}
 
-	func line(sender: AnyObject?) {
+	@objc func line(_ sender: AnyObject?) {
 		let text = textView.text as NSString
-		textView.selectedRange = text.lineRangeForRange(textView.selectedRange)
+		textView.selectedRange = text.lineRange(for: textView.selectedRange)
 	}
 }
 
 
 extension TextViewController: UITextViewDelegate {
-	func textViewDidChangeSelection(textView: UITextView) {
+	func textViewDidChangeSelection(_ textView: UITextView) {
 		selectionBarButtonItem.title = "\(textView.selectedRange)"
 
 		let text = textView.text as NSString
-		lineBarButtonItem.title =  "\(text.lineRangeForRange(textView.selectedRange))"
+		lineBarButtonItem.title =  "\(text.lineRange(for: textView.selectedRange))"
 	}
 }
